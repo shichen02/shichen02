@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang='zh-Hans'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.18.5">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>ScheduledThreadPoolExecutor 踩坑 - shichen's blog</title>
+
+  
+    <meta name="description" content="ScheduledThreadPoolExecutor 工作中大家都经常会用到，可以用来执行定时任务。最近我在开发监控模块的时候用到了这个类，出现了任务执行到一半他就不执行了的问题。下面是我抽离业务之后的代码: 一、首先建立了一个管理类，用于管理线程池，只开放了定时任务执行方法 123456789101112131415161718192021222324252627282930313233343">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ScheduledThreadPoolExecutor 踩坑">
+<meta property="og:url" content="https://shichen02.github.io/shichen02/2023/06/02/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/index.html">
+<meta property="og:site_name" content="shichen&#39;s blog">
+<meta property="og:description" content="ScheduledThreadPoolExecutor 工作中大家都经常会用到，可以用来执行定时任务。最近我在开发监控模块的时候用到了这个类，出现了任务执行到一半他就不执行了的问题。下面是我抽离业务之后的代码: 一、首先建立了一个管理类，用于管理线程池，只开放了定时任务执行方法 123456789101112131415161718192021222324252627282930313233343">
+<meta property="og:locale">
+<meta property="og:image" content="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/image-20230601215033231.png">
+<meta property="og:image" content="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/image-20230601214823426.png">
+<meta property="article:published_time" content="2023-06-02T01:32:21.723Z">
+<meta property="article:modified_time" content="2023-06-02T01:32:21.723Z">
+<meta property="article:author" content="shichen02">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/image-20230601215033231.png">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/shichen02/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="title" href="/shichen02/"><div class="main" ff="title">shichen's blog</div></a></div>
+
+<nav class="menu dis-select"></nav>
+</header>
+
+
+<div class="widgets">
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" data-filter="/blog/" placeholder="文章搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">No Results!</div></div></div></widget>
+
+
+
+<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">Recent Update</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/shichen02/2023/06/02/SSH/"><span class="title">SSH 的前世今生</span></a><a class="item title" href="/shichen02/2023/06/02/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/"><span class="title">ScheduledThreadPoolExecutor 踩坑</span></a><a class="item title" href="/shichen02/2023/06/02/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/"><span class="title">操作系统的发展概述与展望</span></a></div></widget>
+
+
+
+
+
+</div>
+
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/shichen02/">Home</a><span class="sep"></span><a class="cap breadcrumb" href="/shichen02/">Blog</a><span class="sep"></span><a class="cap breadcrumb-link" href="/shichen02/categories/BUG/">BUG</a></div><div id="post-meta">Posted on&nbsp;<time datetime="2023-06-02T01:32:21.723Z">2023-06-02</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>ScheduledThreadPoolExecutor 踩坑</span></h1>
+<p>ScheduledThreadPoolExecutor 工作中大家都经常会用到，可以用来执行定时任务。最近我在开发监控模块的时候用到了这个类，出现了任务执行到一半他就不执行了的问题。下面是我抽离业务之后的代码:</p>
+<p>一、首先建立了一个管理类，用于管理线程池，只开放了定时任务执行方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadPoolManager</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">ThreadPoolManager</span> <span class="variable">instance</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolManager</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ThreadPoolManager <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">TIMOUT</span> <span class="operator">=</span> <span class="number">2000L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">SCHEDULE_CORE_POOL_SIZE</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">CORE_POOL_SIZE</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAX_POOL_SIZE</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">KEEP_ALIVE_TIME</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">ThreadPoolManager</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">ExecutorService</span> <span class="variable">THREAD_POOL</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(CORE_POOL_SIZE,</span><br><span class="line">            MAX_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS,</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;&gt;(), task -&gt; &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(task);</span><br><span class="line">        thread.setName(<span class="string">&quot;normal-thread-&quot;</span> + thread.getId());</span><br><span class="line">        <span class="keyword">return</span> thread;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">ScheduledThreadPoolExecutor</span> <span class="variable">SCHEDULED_EXECUTOR_POOL</span></span><br><span class="line">            <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ScheduledThreadPoolExecutor</span>(SCHEDULE_CORE_POOL_SIZE, task -&gt; &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(task);</span><br><span class="line">        thread.setName(<span class="string">&quot;schedule-thread-&quot;</span> + thread.getId());</span><br><span class="line">        <span class="keyword">return</span> thread;</span><br><span class="line">    &#125;) &#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 重写afterExecute方法</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> r the runnable that has completed</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> t the exception that caused termination, or null if</span></span><br><span class="line"><span class="comment">         * execution completed normally</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">afterExecute</span><span class="params">(Runnable r, Throwable t)</span> &#123;</span><br><span class="line">            <span class="built_in">super</span>.afterExecute(r, t);</span><br><span class="line">            <span class="comment">//这个是 Execute 提交的时候</span></span><br><span class="line">            <span class="keyword">if</span> (t != <span class="literal">null</span>) &#123;</span><br><span class="line">                log.error(<span class="string">&quot;afterExecute里面获取到异常信息&quot;</span> + t.getMessage());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//如果r的实际类型是FutureTask 那么是submit提交的，所以可以在里面get到异常</span></span><br><span class="line">            <span class="keyword">if</span> (r <span class="keyword">instanceof</span> FutureTask) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Future&lt;?&gt; future = (Future&lt;?&gt;) r;</span><br><span class="line">                    future.get();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    log.error(<span class="string">&quot;future里面取执行异常&quot;</span>, e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        SCHEDULED_EXECUTOR_POOL.setRemoveOnCancelPolicy(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; scheduleAtFix(Runnable task, String taskInfo, <span class="type">long</span> initialDelay, <span class="type">long</span> period, TimeUnit unit) &#123;</span><br><span class="line">        <span class="type">RunnableWrapper</span> <span class="variable">taskWrapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RunnableWrapper</span>(task, taskInfo);</span><br><span class="line">        taskWrapper.setShowWaitLog(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> SCHEDULED_EXECUTOR_POOL.scheduleAtFixedRate(taskWrapper, initialDelay, period, unit);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(Runnable task)</span> &#123;</span><br><span class="line">        THREAD_POOL.execute(task);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>二、为了监控任务，我建立了一个包装类，来包装任务，打印相关指标</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RunnableWrapper</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 实际要执行的线程任务</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Runnable task;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 最后实施时间</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> lastExectutionTime;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 线程任务被线程池运行的开始时间</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> startTime;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 线程任务被线程池运行的结束时间</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> endTime;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 线程信息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String taskInfo;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 显示等待日志</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> showWaitLog;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 执行间隔时间多久，打印日志</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="variable">durMs</span> <span class="operator">=</span> <span class="number">1000L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 次</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="variable">executionTimes</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当这个任务被创建出来的时候，就会设置他的创建时间</span></span><br><span class="line"><span class="comment">     * 但是接下来有可能这个任务提交到线程池后，会进入线程池的队列排队</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> task     任务</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> taskInfo 任务信息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">RunnableWrapper</span><span class="params">(Runnable task, String taskInfo)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.task = task;</span><br><span class="line">        <span class="built_in">this</span>.taskInfo = taskInfo;</span><br><span class="line">        <span class="built_in">this</span>.lastExectutionTime = System.currentTimeMillis();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setShowWaitLog</span><span class="params">(<span class="type">boolean</span> showWaitLog)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.showWaitLog = showWaitLog;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setDurMs</span><span class="params">(<span class="type">long</span> durMs)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.durMs = durMs;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当任务在线程池排队的时候，这个run方法是不会被运行的</span></span><br><span class="line"><span class="comment">     * 但是当任务结束了排队，得到线程池运行机会的时候，这个方法会被调用</span></span><br><span class="line"><span class="comment">     * 此时就可以设置线程任务的开始运行时间</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.startTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 此处可以通过调用监控系统的API，实现监控指标上报</span></span><br><span class="line">        <span class="comment">// 用线程任务的startTime-createTime，其实就是任务排队时间</span></span><br><span class="line">        <span class="comment">// 这边打印日志输出，也可以输出到监控系统中</span></span><br><span class="line">        <span class="keyword">if</span> (showWaitLog) &#123;</span><br><span class="line">            log.info(<span class="string">&quot;任务信息: [&#123;&#125;], 任务排队时间: [&#123;&#125;]ms ,执行次数: [&#123;&#125;]&quot;</span>, taskInfo, startTime - lastExectutionTime, executionTimes);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 接着可以调用包装的实际任务的run方法</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            task.run();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;run task error&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 任务运行完毕以后，会设置任务运行结束的时间</span></span><br><span class="line">        <span class="built_in">this</span>.endTime = System.currentTimeMillis();</span><br><span class="line">        <span class="built_in">this</span>.lastExectutionTime = endTime;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 此处可以通过调用监控系统的API，实现监控指标上报</span></span><br><span class="line">        <span class="comment">// 用线程任务的endTime - startTime，其实就是任务运行时间</span></span><br><span class="line">        <span class="comment">// 这边打印任务执行时间，也可以输出到监控系统中</span></span><br><span class="line">        log.info(<span class="string">&quot;任务耗时: [&#123;&#125;]ms&quot;</span>, endTime - startTime);</span><br><span class="line">        <span class="keyword">if</span> (endTime - startTime &gt; durMs) &#123;</span><br><span class="line">            log.warn(<span class="string">&quot;任务信息: [&#123;&#125;], 任务执行时间: [&#123;&#125;]ms ,执行次数: [&#123;&#125;]&quot;</span>, taskInfo, endTime - startTime, executionTimes);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        executionTimes++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>三、构造主类，模拟任务执行，这里使用了 10 个线程的线程池来定时执行 20 个任务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) &#123;</span><br><span class="line">            <span class="type">Runnable</span> <span class="variable">job</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                    <span class="comment">// 模拟任务执行...</span></span><br><span class="line">                    <span class="type">Long</span> <span class="variable">v</span> <span class="operator">=</span> RandomUtil.randomLong(<span class="number">500</span>, <span class="number">1000</span>);</span><br><span class="line">                    log.info(<span class="string">&quot;正在执行任务...&quot;</span>);</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        Thread.sleep(v);</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                        log.error(<span class="string">&quot;发生异常了&quot;</span>, e);</span><br><span class="line">                    &#125;</span><br><span class="line">                    log.info(<span class="string">&quot;执行任务完成...&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line">            ThreadPoolManager.getInstance().scheduleAtFix(job,</span><br><span class="line">                    StrUtil.format(<span class="string">&quot;this is job &#123;&#125; &quot;</span>, i),</span><br><span class="line">                    <span class="number">1</span>, <span class="number">5</span>, TimeUnit.SECONDS);</span><br><span class="line">        &#125;</span><br><span class="line">  <span class="comment">// 避免 main 线程执行完毕</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">21:45:36.094 [schedule-thread-18] INFO RunnableWrapper - 任务信息: [this is job 5 ], 任务排队时间: [1004]ms ,执行次数: [0]</span><br><span class="line">21:45:36.094 [schedule-thread-15] INFO RunnableWrapper - 任务信息: [this is job 2 ], 任务排队时间: [1004]ms ,执行次数: [0]</span><br><span class="line">21:45:36.094 [schedule-thread-16] INFO RunnableWrapper - 任务信息: [this is job 3 ], 任务排队时间: [1004]ms ,执行次数: [0]</span><br><span class="line">21:45:36.094 [schedule-thread-20] INFO RunnableWrapper - 任务信息: [this is job 7 ], 任务排队时间: [1004]ms ,执行次数: [0]</span><br><span class="line">21:45:36.094 [schedule-thread-14] INFO RunnableWrapper - 任务信息: [this is job 1 ], 任务排队时间: [1004]ms ,执行次数: [0]</span><br><span class="line">21:45:36.094 [schedule-thread-22] INFO RunnableWrapper - 任务信息: [this is job 9 ], 任务排队时间: [1004]ms ,执行次数: [0]</span><br><span class="line">21:45:36.094 [schedule-thread-17] INFO RunnableWrapper - 任务信息: [this is job 4 ], 任务排队时间: [1004]ms ,执行次数: [0]</span><br><span class="line">21:45:36.094 [schedule-thread-13] INFO RunnableWrapper - 任务信息: [this is job 0 ], 任务排队时间: [1009]ms ,执行次数: [0]</span><br><span class="line">21:45:36.094 [schedule-thread-19] INFO RunnableWrapper - 任务信息: [this is job 6 ], 任务排队时间: [1004]ms ,执行次数: [0]</span><br><span class="line">21:45:36.094 [schedule-thread-21] INFO RunnableWrapper - 任务信息: [this is job 8 ], 任务排队时间: [1004]ms ,执行次数: [0]</span><br><span class="line">21:45:36.098 [schedule-thread-16] INFO Main - 正在执行任务...</span><br><span class="line">21:45:36.098 [schedule-thread-13] INFO Main - 正在执行任务...</span><br><span class="line">21:45:36.098 [schedule-thread-17] INFO Main - 正在执行任务...</span><br><span class="line">21:45:36.098 [schedule-thread-21] INFO Main - 正在执行任务...</span><br><span class="line">21:45:36.098 [schedule-thread-14] INFO Main - 正在执行任务...</span><br><span class="line">21:45:36.098 [schedule-thread-19] INFO Main - 正在执行任务...</span><br><span class="line">21:45:36.098 [schedule-thread-20] INFO Main - 正在执行任务...</span><br><span class="line">21:45:36.098 [schedule-thread-22] INFO Main - 正在执行任务...</span><br><span class="line">21:45:36.098 [schedule-thread-18] INFO Main - 正在执行任务...</span><br><span class="line">21:45:36.099 [schedule-thread-15] INFO Main - 正在执行任务...</span><br><span class="line">21:45:36.605 [schedule-thread-13] INFO Main - 执行任务完成...</span><br><span class="line">21:45:36.606 [schedule-thread-13] INFO RunnableWrapper - 任务耗时: [513]ms</span><br><span class="line">21:45:36.620 [schedule-thread-22] INFO Main - 执行任务完成...</span><br><span class="line">21:45:36.620 [schedule-thread-22] INFO RunnableWrapper - 任务耗时: [527]ms</span><br><span class="line">21:45:36.708 [schedule-thread-17] INFO Main - 执行任务完成...</span><br><span class="line">21:45:36.708 [schedule-thread-17] INFO RunnableWrapper - 任务耗时: [615]ms</span><br><span class="line">21:45:36.951 [schedule-thread-15] INFO Main - 执行任务完成...</span><br><span class="line">21:45:36.951 [schedule-thread-15] INFO RunnableWrapper - 任务耗时: [858]ms</span><br><span class="line">21:45:36.978 [schedule-thread-20] INFO Main - 执行任务完成...</span><br><span class="line">21:45:36.978 [schedule-thread-20] INFO RunnableWrapper - 任务耗时: [885]ms</span><br><span class="line">21:45:37.009 [schedule-thread-14] INFO Main - 执行任务完成...</span><br><span class="line">21:45:37.010 [schedule-thread-14] INFO RunnableWrapper - 任务耗时: [917]ms</span><br><span class="line">21:45:37.036 [schedule-thread-18] INFO Main - 执行任务完成...</span><br><span class="line">21:45:37.036 [schedule-thread-18] INFO RunnableWrapper - 任务耗时: [943]ms</span><br><span class="line">21:45:37.048 [schedule-thread-21] INFO Main - 执行任务完成...</span><br><span class="line">21:45:37.049 [schedule-thread-21] INFO RunnableWrapper - 任务耗时: [956]ms</span><br><span class="line">21:45:37.086 [schedule-thread-16] INFO Main - 执行任务完成...</span><br><span class="line">21:45:37.086 [schedule-thread-16] INFO RunnableWrapper - 任务耗时: [993]ms</span><br><span class="line">21:45:37.101 [schedule-thread-19] INFO Main - 执行任务完成...</span><br><span class="line">21:45:37.101 [schedule-thread-19] INFO RunnableWrapper - 任务耗时: [1008]ms</span><br><span class="line">21:45:37.101 [schedule-thread-19] WARN RunnableWrapper - 任务信息: [this is job 6 ], 任务执行时间: [1008]ms ,执行次数: [0]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以发现我的任务甚至都没有提交完毕，日志就不打印了。我这里想可能是任务队列没有任务了</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/image-20230601215033231.png" alt="image-20230601215033231"></p>
+<p>结果任务明明都放在任务队列里面了啊，让我们打个断点看看线程在干什么</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/image-20230601214823426.png" alt="image-20230601214823426"></p>
+<p>可以发现线程池中的线程全部处于 WAIT 状态</p>
+<p>为什么会这样呢，答案其实就在 <code>futureTask.get()</code> 这行代码上</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> V <span class="title function_">get</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException, ExecutionException &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> state;</span><br><span class="line">    <span class="comment">// 如果任务已经在执行中了，那么就进入等待</span></span><br><span class="line">    <span class="keyword">if</span> (s &lt;= COMPLETING)</span><br><span class="line">        s = awaitDone(<span class="literal">false</span>, <span class="number">0L</span>);</span><br><span class="line">    <span class="keyword">return</span> report(s);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个方法会一直等待线程执行完毕,而线程执行完毕是有 state 的状态来判断的,而 ScheduledThreadPoolExecutor 不会更改 state<br>参考文章：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6949346078630084645">https://juejin.cn/post/6949346078630084645</a></p>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>License</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/shichen02/2023/06/02/SSH/">SSH 的前世今生</a></div><div class="item" id="next"><div class="note">Older</div><a href="/shichen02/2023/06/02/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/">操作系统的发展概述与展望</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.18.5';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.18.5';
+  stellar.config = {
+    date_suffix: {
+      just: 'Just',
+      min: 'minutes ago',
+      hour: 'hours ago',
+      day: 'days ago',
+      month: 'months ago',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/shichen02/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>
