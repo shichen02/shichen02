@@ -17,8 +17,8 @@ sftp 是 SSH 提供的一个客户端应用程序，主要用来安全地访问 
 
 ### 对称加密
 对称加密指加密解密使用同一套秘钥。常用的对称加密算法有 AES、Blowfish、3DES、CAST128、以及Arcfour。原理图如下：
-![](https://cdn.nlark.com/yuque/0/2022/webp/23060187/1670330917336-b9b38e52-9c5c-4453-bfbd-5b7603631ca1.webp#averageHue=%23f4f4f4&clientId=u6ad43652-4976-4&from=paste&id=u2081d1f8&originHeight=190&originWidth=764&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=u45cda712-dfee-47b1-9d6d-d09303ca229&title=)
-![](https://cdn.nlark.com/yuque/0/2022/webp/23060187/1670330924205-79e43633-b340-4c52-8fb1-3cfced6cffec.webp#averageHue=%23f4f4f4&clientId=u6ad43652-4976-4&from=paste&id=u2a78e038&originHeight=191&originWidth=764&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=ufa3a095d-46c3-4b92-9231-936dd8edc8f&title=)
+![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670330917336-b9b38e52-9c5c-4453-bfbd-5b7603631ca1.webp)
+![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670330924205-79e43633-b340-4c52-8fb1-3cfced6cffec.webp)
 
 ### 非对称加密
 1976年，美国学者Dime和Henman为解决信息公开传送和密钥管理问题，提出一种新的密钥交换协议，允许在不安全的媒体上的通讯双方交换信息，安全地达成一致的密钥，这就是“公开密钥系统”。
@@ -29,7 +29,7 @@ sftp 是 SSH 提供的一个客户端应用程序，主要用来安全地访问 
 
 非对称加密如何被应用呢？以用户 TopGun 要尝试登录服务器为例，流程图如下
 
-![](https://cdn.nlark.com/yuque/0/2022/webp/23060187/1670330934150-641b8b18-08df-4b73-81b3-9a0c61cdab94.webp#averageHue=%2372cc9a&clientId=u6ad43652-4976-4&from=paste&id=u563ee0aa&originHeight=542&originWidth=569&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=u40e30782-79fb-475d-b31c-0a2a6a12f03&title=)
+![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670330934150-641b8b18-08df-4b73-81b3-9a0c61cdab94.webp)
 
 登录流程：
 
@@ -45,7 +45,8 @@ sftp 是 SSH 提供的一个客户端应用程序，主要用来安全地访问 
 > Client端如何保证接受到的公钥就是目标Server端的？，如果一个攻击者中途拦截Client的登录请求，向其发送自己的公钥，Client端用攻击者的公钥进行数据加密。攻击者接收到加密信息后再用自己的私钥进行解密，不就窃取了Client的登录信息了吗？
 
 如果有人截获了登录请求，然后冒充远程主机，将伪造的公钥发给用户，那么用户很难辨别真伪。因为不像https协议，SSH协议的公钥是没有证书中心（CA）公证的，也就是说，都是自己签发的。可以设想具体场景，如果攻击者插在用户与远程主机之间（比如在公共的wifi区域），用伪造的公钥，获取用户的登录密码。再用这个密码登录远程主机，那么SSH的安全机制就荡然无存了。这种风险就是著名的"中间人攻击"(Man-in-the-middle attack)。
-![](https://cdn.nlark.com/yuque/0/2022/webp/23060187/1670330943900-e7a79e9b-fab2-4b9e-b2c2-5c4bc4dbeaaf.webp#averageHue=%23cfe5db&clientId=u6ad43652-4976-4&from=paste&id=u12c6e64a&originHeight=481&originWidth=623&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=uf23e19ea-042f-469b-bc59-e8a501e0b31&title=)
+![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670330943900-e7a79e9b-fab2-4b9e-b2c2-5c4bc4dbeaaf.webp)
+
 ### SSH解决中间人攻击
 #### 1、口令登录（基于口令的认证）
 从上面的描述可以看出，问题就在于如何对Server的公钥进行认证？在https中可以通过CA来进行公证，可是SSH的publish key和private key都是自己生成的，没法公证。只能通过Client端自己对公钥进行确认。
@@ -78,8 +79,8 @@ Are you sure you want to continue connecting (yes/no)?
 
 以用户 TopGun 为例，流程如下：
 公钥认证流程：
-![公钥认证流程图 1](https://cdn.nlark.com/yuque/0/2022/png/23060187/1670144598451-1df25a2b-4b50-4c6c-9216-4f36bda4e91e.png#averageHue=%23020202&clientId=u502bb770-0544-4&from=paste&height=706&id=uce12715b&originHeight=635&originWidth=1142&originalType=binary&ratio=1&rotation=0&showTitle=true&size=50539&status=done&style=stroke&taskId=u402a7b8d-c32a-4549-bc0d-34ad3c65a29&title=%E5%85%AC%E9%92%A5%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B%E5%9B%BE%201&width=1268.888922502966 "公钥认证流程图 1")
-![公钥认证流程图 2](https://cdn.nlark.com/yuque/0/2022/webp/23060187/1670330960539-68ba9d77-471c-4cf8-aada-c6f8698dc94f.webp#averageHue=%23a8afa1&clientId=u6ad43652-4976-4&from=paste&id=u2adc57e6&originHeight=836&originWidth=1200&originalType=url&ratio=1&rotation=0&showTitle=true&status=done&style=stroke&taskId=ub43ef4d6-a4d8-423f-8ab6-b3a3449db90&title=%E5%85%AC%E9%92%A5%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B%E5%9B%BE%202 "公钥认证流程图 2")
+![未命名文件](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6.png)
+![2599999-c405729b13b0495d](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/2599999-c405729b13b0495d.png)
 
 1. Client 端用户 TopGun 将自己的公钥存放在 Server 上，追加在文件 authorized_keys 中。
 2. Server 收到登录请求后，服务器的公钥验证通过后, 双方会依据 Diffie-Hellman 算法生成一个共享 `session key` （此时双方都有 `session key`）会话密钥将用于加密整个会话。之后 Server  随机生成一个字符串 str，并发送给 Client。
@@ -87,8 +88,7 @@ Are you sure you want to continue connecting (yes/no)?
 4. 服务器使用  `session key` 它发送给客户端的随机 str 来自行计算 MD5 值。它将自己的计算与客户端发回的计算进行比较。如果这两个值匹配，则证明客户端拥有私钥并且客户端已通过身份验证
 
 > 在步骤1中，Client将自己的公钥存放在Server上。需要用户手动将公钥copy到server上。这就是在配置ssh的时候进程进行的操作。下图是GitLab上SSH keys设置视图：
-> ![](https://cdn.nlark.com/yuque/0/2022/png/23060187/1670143271055-5e7c0e9a-614f-4d15-a4d0-046a988fa39c.png#averageHue=%23fbfbfb&clientId=u502bb770-0544-4&from=paste&id=ua362a4a6&originHeight=936&originWidth=2496&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=ufb0eff60-a48f-40dc-88dc-146c6f7d036&title=)
-> 
+> ![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670143271055-5e7c0e9a-614f-4d15-a4d0-046a988fa39c.png)
 
 这种方法要求用户必须提供自己的公钥。如果没有现成的，可以直接用ssh-keygen生成一个：
 ```shell
@@ -135,23 +135,26 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCk7sNBV8ag8KKApN4mapTQTkDEbcA3VNFIhSuO+YLT
 ## 配置 Windows Terminal
 #### 1.下载 Windows Terminal
 在微软商店（Microsoft Store）搜索下载Windows Terminal。
-![](https://cdn.nlark.com/yuque/0/2022/png/23060187/1670145414520-801211fc-07dd-4c01-bcea-203c5eb649bc.png#averageHue=%23f7f7f7&clientId=u502bb770-0544-4&from=paste&id=u78066f12&originHeight=198&originWidth=631&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=ud0c0c304-cb1a-4695-b3ed-e67c52d9634&title=)
+![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670145414520-801211fc-07dd-4c01-bcea-203c5eb649bc.png)
+
 #### 2. 安装 OpenSSH 客户端
 在设置-->应用-->可选功能中添加OpenSSH客户端
-![](https://cdn.nlark.com/yuque/0/2022/png/23060187/1670145434758-af59935a-6bb2-45a4-956e-b5fd81a30276.png#averageHue=%23f2f5f8&clientId=u502bb770-0544-4&from=paste&id=ub1438820&originHeight=504&originWidth=1003&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=ua4d40afc-6b9a-4085-a230-002cecf1458&title=)
+![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670145434758-af59935a-6bb2-45a4-956e-b5fd81a30276.png)
+
 #### 3. 测试 ssh 和 scp 命令功能
-![](https://cdn.nlark.com/yuque/0/2022/png/23060187/1670145450357-48be18e5-c7a6-44ea-bb03-20d4ae413649.png#averageHue=%23282828&clientId=u502bb770-0544-4&from=paste&id=ubb7315b5&originHeight=386&originWidth=743&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=u7f0a66ab-4a45-426c-a9c4-d93c74baaec&title=)
+![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670145450357-48be18e5-c7a6-44ea-bb03-20d4ae413649.png)
 #### 4. 生成密钥
 在 CMD 中执行命令 ssh-keygen
-![](https://cdn.nlark.com/yuque/0/2022/png/23060187/1670145473739-dde00269-37dc-4903-ab6b-ebb6d4a3abe2.png#averageHue=%23161616&clientId=u502bb770-0544-4&from=paste&id=u98c34e26&originHeight=404&originWidth=692&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=ufdf573bc-7675-4fc3-9fa7-f029ca34b7e&title=)
+![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670145473739-dde00269-37dc-4903-ab6b-ebb6d4a3abe2.png)
+
 #### 5. 使用 scp 命令将 Windows 公钥发送至服务器
 ```
 scp -P 22 C:\Users\tangsc\.ssh\id_rsa.pub root@1.117.62.185:~/.ssh/authorized_keys
 ```
-![](https://cdn.nlark.com/yuque/0/2022/png/23060187/1670145494586-3d2d6d6b-6a33-4db2-b9eb-e21537877695.png#averageHue=%231c1c1c&clientId=u502bb770-0544-4&from=paste&id=u6ede6e19&originHeight=168&originWidth=1044&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=uc3f659d4-e1f5-4cb7-9d7e-0e4f5baa66d&title=)
+![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670145494586-3d2d6d6b-6a33-4db2-b9eb-e21537877695.png)
 #### 6. 在 Windows Terminal 设置登录配置文件
 复制一份命令提示符的配置文件，修改命令行。
-![](https://cdn.nlark.com/yuque/0/2022/png/23060187/1670145510105-96966bf9-c9e2-458a-a977-870e94d1433f.png#averageHue=%23f7f7f7&clientId=u502bb770-0544-4&from=paste&id=u9e4c7d6f&originHeight=558&originWidth=476&originalType=url&ratio=1&rotation=0&showTitle=false&status=done&style=stroke&taskId=u6213d79e-daf3-4987-aafb-fc6bb7a8d9e&title=)
+![](https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1670145510105-96966bf9-c9e2-458a-a977-870e94d1433f.png)
 
 
 更新时间

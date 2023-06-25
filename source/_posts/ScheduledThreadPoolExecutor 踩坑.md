@@ -299,5 +299,12 @@ public V get() throws InterruptedException, ExecutionException {
 
 ```
 
-这个方法会一直等待线程执行完毕,而线程执行完毕是有 state 的状态来判断的,而 ScheduledThreadPoolExecutor 不会更改 state
-参考文章：https://juejin.cn/post/6949346078630084645
+这个方法会一直等待线程执行完毕,而线程执行完毕是有 state 的状态来判断的,而 ScheduledThreadPoolExecutor 不会更改 state。
+
+
+
+参考文章：
+
+1、https://juejin.cn/post/6949346078630084645
+
+2、https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html
