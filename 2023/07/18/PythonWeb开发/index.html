@@ -26,12 +26,12 @@
     <meta name="description" content="Python webWSGI 概念​	django 只是一个解析框架，他不能直接处理 HTTP 请求和 HTTP 响应，要想它能够直接部署在生产环境中，你必须得安装符合 WSGI:Python Web Server Gateway Interface v1.0 规范的 web 服务器。​	WSGI 它是 PEP3333中定义的（PEP3333的目标建立一个简单的普遍适用的服务器与Web框架之间的接">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python web">
-<meta property="og:url" content="https://shichen02.github.io/shichen02/2023/07/17/PythonWeb%E5%BC%80%E5%8F%91/index.html">
+<meta property="og:url" content="https://shichen02.github.io/shichen02/2023/07/18/PythonWeb%E5%BC%80%E5%8F%91/index.html">
 <meta property="og:site_name" content="shichen&#39;s blog">
 <meta property="og:description" content="Python webWSGI 概念​	django 只是一个解析框架，他不能直接处理 HTTP 请求和 HTTP 响应，要想它能够直接部署在生产环境中，你必须得安装符合 WSGI:Python Web Server Gateway Interface v1.0 规范的 web 服务器。​	WSGI 它是 PEP3333中定义的（PEP3333的目标建立一个简单的普遍适用的服务器与Web框架之间的接">
 <meta property="og:locale">
-<meta property="article:published_time" content="2023-07-17T14:31:13.177Z">
-<meta property="article:modified_time" content="2023-07-17T14:31:13.177Z">
+<meta property="article:published_time" content="2023-07-18T09:04:34.943Z">
+<meta property="article:modified_time" content="2023-07-18T09:04:34.943Z">
 <meta property="article:author" content="shichen02">
 <meta name="twitter:card" content="summary">
   
@@ -93,7 +93,7 @@
       
 
 
-<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/shichen02/">Home</a><span class="sep"></span><a class="cap breadcrumb" href="/shichen02/">Blog</a><span class="sep"></span><a class="cap breadcrumb-link" href="/shichen02/categories/python/">python</a></div><div id="post-meta">Posted on&nbsp;<time datetime="2023-07-17T14:31:13.177Z">2023-07-17</time></div></div>
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/shichen02/">Home</a><span class="sep"></span><a class="cap breadcrumb" href="/shichen02/">Blog</a><span class="sep"></span><a class="cap breadcrumb-link" href="/shichen02/categories/python/">python</a></div><div id="post-meta">Posted on&nbsp;<time datetime="2023-07-18T09:04:34.943Z">2023-07-18</time></div></div>
 
 <article class='md-text content post'>
 <h1 class="article-title"><span>Python web</span></h1>
@@ -121,7 +121,25 @@
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> python:<span class="number">3.9</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mkdir</span> /app</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> pip install --upgrade pip</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> requirements.txt /app/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> pip install -r requirements.txt</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> . /app/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;python&quot;</span>, <span class="string">&quot;main.py&quot;</span>]</span></span><br></pre></td></tr></table></figure>
 
 <p>生成镜像</p>
+<p>1.通过 Dockerfile 生成</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build --tag python-docker .</span><br></pre></td></tr></table></figure>
+<p>2.使用 export 和 import 命令</p>
+<ul>
+<li><p>这两个命令是通过容器来导入和导出镜像的。首先，需要使用<code>docker export</code>命令根据容器ID将镜像导出成一个文件，例如</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker export f299f501774c &gt; some_server.tar</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后，可以使用<code>docker import</code>命令将这个文件导入成一个新的镜像，例如</p>
+</li>
+<li><pre><code class="shell">`docker import - new_hangger_server &lt; some_server.tar`
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  这种方案的优点是导出的文件体积较小，而且可以为导入的镜像指定新名称。但是缺点是会丢失镜像的历史记录和元数据信息，只能保存容器当时的快照状态。</span><br><span class="line"></span><br><span class="line">3.使用save和load命令</span><br><span class="line"></span><br><span class="line">- 这两个命令是通过镜像来保存和加载镜像文件的。首先，需要使用`docker save`命令根据镜像名称或ID将镜像保存成一个文件，例如</span><br><span class="line"></span><br><span class="line">  ```shell</span><br><span class="line">  docker save -o ./ubuntu18.tar ubuntu:18.04</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+<li><p>然后，可以使用<code>docker load</code>命令将这个文件加载成一个镜像，例如</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load &lt; ubuntu18.tar</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这种方案的优点是不会丢失镜像的历史记录和元数据信息，而且可以同时将多个镜像打包成一个文件。但是缺点是保存的文件体积较大，而且不能对加载的镜像重命名。</p>
+</li>
+</ul>
 <p>打上标签</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag python-docker:latest</span><br></pre></td></tr></table></figure>
 <p>测试部署</p>
@@ -144,7 +162,7 @@
 
 </article>
 
-<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/shichen02/2023/07/17/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/">ScheduledThreadPoolExecutor 踩坑</a></div><div class="item" id="next"></div></section></div>
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">Older</div><a href="/shichen02/2023/07/18/Python%E5%BC%95%E7%94%A8%E8%B8%A9%E5%9D%91/">2023-07-18</a></div></section></div>
 
 
 

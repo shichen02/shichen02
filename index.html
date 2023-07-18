@@ -71,7 +71,7 @@
 <div class="widgets">
 <widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="Search"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">No Results!</div></div></div></widget>
 
-<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">Recent Update</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/shichen02/2023/07/17/SSH/"><span class="title">SSH 的前世今生</span></a><a class="item title" href="/shichen02/2023/07/17/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/"><span class="title">操作系统的发展概述与展望</span></a><a class="item title" href="/shichen02/2023/07/17/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/"><span class="title">ScheduledThreadPoolExecutor 踩坑</span></a><a class="item title" href="/shichen02/2023/07/17/PythonWeb%E5%BC%80%E5%8F%91/"><span class="title">Python web</span></a></div></widget>
+<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">Recent Update</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/shichen02/2023/07/18/PythonWeb%E5%BC%80%E5%8F%91/"><span class="title">Python web</span></a><a class="item title" href="/shichen02/2023/07/18/SSH/"><span class="title">SSH 的前世今生</span></a><a class="item title" href="/shichen02/2023/07/18/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/"><span class="title">ScheduledThreadPoolExecutor 踩坑</span></a><a class="item title" href="/shichen02/2023/07/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/"><span class="title">操作系统的发展概述与展望</span></a></div></widget>
 
 
 </div>
@@ -93,19 +93,25 @@
 
 <div class="nav-wrap"><nav class="sub post cap"><a class="active" href="/shichen02/">Recent</a><a href="/shichen02/categories">Categories</a><a href="/shichen02/archives">Archives</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/shichen02/2023/07/17/SSH/">
+  <div class="post-list post"><a class="post-card post " href="/shichen02/2023/07/18/PythonWeb%E5%BC%80%E5%8F%91/">
+<article class="md-text"><h2 class="post-title">Python web</h2><div class="excerpt"><p>Python webWSGI 概念​	django 只是一个解析框架，他不能直接处理 HTTP 请求和 HTTP 响应，要想它能够直接部署在生产环境中，你必须得安装符合 WSGI:Python Web Server Gateway Interface v1.0 规范的 web 服务器。​	WSGI 它是 PEP3333中定义的（PEP3333的目标建立一个简单的普遍适用的服务器与Web框架之...</p></div><div class="meta cap"><span class="cap" id="post-meta">Posted on&nbsp;<time datetime="2023-07-18T09:04:34.943Z">2023-07-18</time></span><span class="cap breadcrumb">python</span></div></article>
+</a><a class="post-card post " href="/shichen02/2023/07/18/Python%E5%BC%95%E7%94%A8%E8%B8%A9%E5%9D%91/">
+<article class="md-text"><h2 class="post-title">2023-07-18</h2><div class="excerpt"><p>python 引用踩坑python  引用的时候出现的一些问题
+python 在引入兄弟模块的时候就容易出问题，比如有一个兄弟模块如下图
+12345678|____first_dir| |______init__.py| |____one.py|____second_dir| |______init__.py| |____two.py
+
+假如在 second_dir 这个模块中的 two.p...</p></div><div class="meta cap"><span class="cap" id="post-meta">Posted on&nbsp;<time datetime="2023-07-18T09:04:34.943Z">2023-07-18</time></span></div></article>
+</a><a class="post-card post " href="/shichen02/2023/07/18/SSH/">
 <article class="md-text"><h2 class="post-title">SSH 的前世今生</h2><div class="excerpt"><p>SSH 是一个用来解决通信安全的一个协议，1995 年，芬兰学者 Tatu Ylonen 设计了 SSH 协议，将登录信息全部加密，成为互联网安全的一个基本解决方案，迅速在全世界获得推广，目前已经成为 Linux 系统的标准配置。
 
-SSH仅仅是一协议标准，其具体的实现有很多，既有开源实现的OpenSSH，也有商业实现方案。使用范围最广泛的当然是开源实现OpenSSH。现在操作系统基本都预装...</p></div><div class="meta cap"><span class="cap" id="post-meta">Posted on&nbsp;<time datetime="2023-07-17T14:31:13.181Z">2023-07-17</time></span><span class="cap breadcrumb">运维</span></div></article>
-</a><a class="post-card post " href="/shichen02/2023/07/17/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/">
-<article class="md-text"><h2 class="post-title">操作系统的发展概述与展望</h2><div class="excerpt"><p>操作系统的发展概述与展望操作系统概念什么是操作系统？维基百科说操作是一组主管并控制计算机操作、运用和运行硬件、软件资源和提供公共服务来组织用户交互的相互关联的系统软件程序。我认为简单的说，操作系统是就是封装了底层的硬件让人们更加便捷的使用的软件。
-历史发展​	随着人工智能技术的发展，我认为以后的操作系统可能会颠覆现有的交互形式。最早的人机交互，是通过先要输入类似于自然语言的助记符的方式来告诉...</p></div><div class="meta cap"><span class="cap" id="post-meta">Posted on&nbsp;<time datetime="2023-07-17T14:31:13.181Z">2023-07-17</time></span><span class="cap breadcrumb">随笔</span></div></article>
-</a><a class="post-card post " href="/shichen02/2023/07/17/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/">
+SSH仅仅是一协议标准，其具体的实现有很多，既有开源实现的OpenSSH，也有商业实现方案。使用范围最广泛的当然是开源实现OpenSSH。现在操作系统基本都预装...</p></div><div class="meta cap"><span class="cap" id="post-meta">Posted on&nbsp;<time datetime="2023-07-18T09:04:34.943Z">2023-07-18</time></span><span class="cap breadcrumb">运维</span></div></article>
+</a><a class="post-card post " href="/shichen02/2023/07/18/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/">
 <article class="md-text"><h2 class="post-title">ScheduledThreadPoolExecutor 踩坑</h2><div class="excerpt"><p>ScheduledThreadPoolExecutor 工作中大家都经常会用到，可以用来执行定时任务。最近我在开发监控模块的时候用到了这个类，出现了任务执行到一半他就不执行了的问题。下面是我抽离业务之后的代码:
 一、首先建立了一个管理类，用于管理线程池，只开放了定时任务执行方法
-123456789101112131415161718192021222324252627282930313233...</p></div><div class="meta cap"><span class="cap" id="post-meta">Posted on&nbsp;<time datetime="2023-07-17T14:31:13.181Z">2023-07-17</time></span><span class="cap breadcrumb">BUG</span></div></article>
-</a><a class="post-card post " href="/shichen02/2023/07/17/PythonWeb%E5%BC%80%E5%8F%91/">
-<article class="md-text"><h2 class="post-title">Python web</h2><div class="excerpt"><p>Python webWSGI 概念​	django 只是一个解析框架，他不能直接处理 HTTP 请求和 HTTP 响应，要想它能够直接部署在生产环境中，你必须得安装符合 WSGI:Python Web Server Gateway Interface v1.0 规范的 web 服务器。​	WSGI 它是 PEP3333中定义的（PEP3333的目标建立一个简单的普遍适用的服务器与Web框架之...</p></div><div class="meta cap"><span class="cap" id="post-meta">Posted on&nbsp;<time datetime="2023-07-17T14:31:13.177Z">2023-07-17</time></span><span class="cap breadcrumb">python</span></div></article>
+123456789101112131415161718192021222324252627282930313233...</p></div><div class="meta cap"><span class="cap" id="post-meta">Posted on&nbsp;<time datetime="2023-07-18T09:04:34.943Z">2023-07-18</time></span><span class="cap breadcrumb">BUG</span></div></article>
+</a><a class="post-card post " href="/shichen02/2023/07/18/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/">
+<article class="md-text"><h2 class="post-title">操作系统的发展概述与展望</h2><div class="excerpt"><p>操作系统的发展概述与展望操作系统概念什么是操作系统？维基百科说操作是一组主管并控制计算机操作、运用和运行硬件、软件资源和提供公共服务来组织用户交互的相互关联的系统软件程序。我认为简单的说，操作系统是就是封装了底层的硬件让人们更加便捷的使用的软件。
+历史发展​	随着人工智能技术的发展，我认为以后的操作系统可能会颠覆现有的交互形式。最早的人机交互，是通过先要输入类似于自然语言的助记符的方式来告诉...</p></div><div class="meta cap"><span class="cap" id="post-meta">Posted on&nbsp;<time datetime="2023-07-18T09:04:34.943Z">2023-07-18</time></span><span class="cap breadcrumb">随笔</span></div></article>
 </a></div>
   
 
