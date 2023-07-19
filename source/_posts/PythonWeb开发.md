@@ -97,51 +97,52 @@ EXPOSE 8080
 ENTRYPOINT ["python", "main.py"]
 ```
 
-生成镜像
+#### 生成镜像
 
-1.通过 Dockerfile 生成
+##### 1.通过 Dockerfile 
 
-```python
+```shell
 docker build --tag python-docker .
 ```
-2.使用 export 和 import 命令
+##### 2.使用 export 和 import 命令
 
 - 这两个命令是通过容器来导入和导出镜像的。首先，需要使用`docker export`命令根据容器ID将镜像导出成一个文件，例如
 
-  ```shell
-  docker export f299f501774c > some_server.tar
-  ```
+```shell
+docker export f299f501774c > some_server.tar
+```
 
 - 然后，可以使用`docker import`命令将这个文件导入成一个新的镜像，例如
 
-- ```shell
-  `docker import - new_hangger_server < some_server.tar`
-  ```
+```shell
+docker import - new_hangger_server < some_server.tar
+```
 
   这种方案的优点是导出的文件体积较小，而且可以为导入的镜像指定新名称。但是缺点是会丢失镜像的历史记录和元数据信息，只能保存容器当时的快照状态。
 
-3.使用save和load命令
+##### 3.使用save和load命令
 
-- 这两个命令是通过镜像来保存和加载镜像文件的。首先，需要使用`docker save`命令根据镜像名称或ID将镜像保存成一个文件，例如
+这两个命令是通过镜像来保存和加载镜像文件的。首先，需要使用`docker save`命令根据镜像名称或ID将镜像保存成一个文件，例如
 
-  ```shell
-  docker save -o ./ubuntu18.tar ubuntu:18.04
-  ```
+```shell
+docker save -o ./ubuntu18.tar ubuntu:18.04
+```
 
-- 然后，可以使用`docker load`命令将这个文件加载成一个镜像，例如
+然后，可以使用`docker load`命令将这个文件加载成一个镜像，例如
 
   ```shell
   docker load < ubuntu18.tar
   ```
 
-- 这种方案的优点是不会丢失镜像的历史记录和元数据信息，而且可以同时将多个镜像打包成一个文件。但是缺点是保存的文件体积较大，而且不能对加载的镜像重命名。
+这种方案的优点是不会丢失镜像的历史记录和元数据信息，而且可以同时将多个镜像打包成一个文件。但是缺点是保存的文件体积较大，而且不能对加载的镜像重命名。
 
-打上标签
+#### 打上标签
 
 ```shell
 docker tag python-docker:latest
 ```
-测试部署
+#### 测试部署
+
 ```shell
 docker run python-docker
 ```

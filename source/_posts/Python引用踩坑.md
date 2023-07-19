@@ -1,5 +1,9 @@
-# python 引用踩坑
+---
+title: python 引用踩坑
+categories: [python]
+---
 
+# python 引用踩坑
 
 
 python  引用的时候出现的一些问题
