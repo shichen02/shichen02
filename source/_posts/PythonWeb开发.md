@@ -4,12 +4,15 @@ categories: [python]
 ---
 
 ## Python web
+
+​	平时在使用 python 的一些库来做业务的时候，需要涉及到与 python 语言交互的问题。当然有很多方案，如：共享内存，网络通讯。下面介绍一种使用 python 自带的 http api 将 python 库封装成 Http 服务供其他客户端调用的方案。
+
 ## WSGI 概念
 
-​	django 只是一个解析框架，他不能直接处理 HTTP 请求和 HTTP 响应，要想它能够直接部署在生产环境中，你必须得安装符合 WSGI:Python Web Server Gateway Interface v1.0 规范的 web 服务器。
+​	首先明确一下 WSGI 的概念。django 等 web 框架只是一个解析框架，他不能直接处理 HTTP 请求和 HTTP 响应，要想它能够直接部署在生产环境中，你必须得安装符合 WSGI:Python Web Server Gateway Interface v1.0 规范的 web 服务器。
 ​	WSGI 它是 PEP3333中定义的（PEP3333的目标建立一个简单的普遍适用的服务器与Web框架之间的接口）WSGI是Python应用程序或框架和Web服务器之间的一种接口 WSGI 被广泛接受, 已基本达成它了可移植性方面的目标，它其实就类似于 Java 中的"servlet" API 。
 ​	uwsgi 实现了 WSGI， uwsgi 的配置文件在的 Django 的同名包目录下，uwsgi 才是一个真正的WEB服务器，它就类似与 Java 中的 tomcat（但是他不仅仅是 web 服务器，它还支持很多其他的协议 。Django 只能接收到他翻译好的结果 ，才能够解析具体的请求和响应。
-​	为什么 Java 和 python 要这样设计呢？我认为是增加了中间层，将复杂的通讯io处理封装成单独的一层，如，servlet API 和 WSGI ，把业务逻辑和分离出去，降低了复杂性。业务逻辑中的框架都满足 servlet API 或 WSGI。类似与网络分层，这些只要满足了这些标准，我们就可以随意切换应用框架，以满足自己的需求。
+​	为什么 Java 和 python 要这样设计呢？欢迎各位朋友发表评论，下面说下我个人的看法，我认为这样做是增加了中间层，servlet API 和 WSGI 将复杂标准是将通讯和io处理封装成单独的一层，把业务逻辑和分离出去，降低了复杂性。类似与网络分层，这些只要满足了这些标准，我们就可以随意切换应用框架，挑选合适的实现以满足自己的需求。
 
 ## 轻量 HTTP 服务
 
