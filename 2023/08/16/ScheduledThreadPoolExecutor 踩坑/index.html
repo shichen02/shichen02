@@ -26,14 +26,14 @@
     <meta name="description" content="ScheduledThreadPoolExecutor 工作中大家都经常会用到，可以用来执行定时任务。最近我在开发监控模块的时候用到了这个类，出现了任务执行到一半他就不执行了的问题。下面是我抽离业务之后的代码: 一、首先建立了一个管理类，用于管理线程池，只开放了定时任务执行方法 123456789101112131415161718192021222324252627282930313233343">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ScheduledThreadPoolExecutor 踩坑">
-<meta property="og:url" content="https://shichen02.github.io/shichen02/2023/07/19/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/index.html">
+<meta property="og:url" content="https://shichen02.github.io/shichen02/2023/08/16/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/index.html">
 <meta property="og:site_name" content="shichen&#39;s blog">
 <meta property="og:description" content="ScheduledThreadPoolExecutor 工作中大家都经常会用到，可以用来执行定时任务。最近我在开发监控模块的时候用到了这个类，出现了任务执行到一半他就不执行了的问题。下面是我抽离业务之后的代码: 一、首先建立了一个管理类，用于管理线程池，只开放了定时任务执行方法 123456789101112131415161718192021222324252627282930313233343">
 <meta property="og:locale">
 <meta property="og:image" content="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/image-20230601215033231.png">
 <meta property="og:image" content="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/image-20230601214823426.png">
-<meta property="article:published_time" content="2023-07-19T03:31:53.257Z">
-<meta property="article:modified_time" content="2023-07-19T03:31:53.257Z">
+<meta property="article:published_time" content="2023-08-16T02:34:39.226Z">
+<meta property="article:modified_time" content="2023-08-16T02:34:39.226Z">
 <meta property="article:author" content="shichen02">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/image-20230601215033231.png">
@@ -82,7 +82,7 @@
 
 
 
-<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">Recent Update</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/shichen02/2023/07/19/PythonWeb%E5%BC%80%E5%8F%91/"><span class="title">Python web</span></a><a class="item title" href="/shichen02/2023/07/19/Python%E5%BC%95%E7%94%A8%E8%B8%A9%E5%9D%91/"><span class="title">python 引用踩坑</span></a><a class="item title" href="/shichen02/2023/07/19/SSH/"><span class="title">SSH 的前世今生</span></a><a class="item title" href="/shichen02/2023/07/19/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/"><span class="title">ScheduledThreadPoolExecutor 踩坑</span></a><a class="item title" href="/shichen02/2023/07/19/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/"><span class="title">操作系统的发展概述与展望</span></a></div></widget>
+<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">Recent Update</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/shichen02/2023/08/16/PythonWeb%E5%BC%80%E5%8F%91/"><span class="title">Python web</span></a><a class="item title" href="/shichen02/2023/08/16/Python%E5%BC%95%E7%94%A8%E8%B8%A9%E5%9D%91/"><span class="title">python 引用踩坑</span></a><a class="item title" href="/shichen02/2023/08/16/SSH/"><span class="title">SSH 的前世今生</span></a><a class="item title" href="/shichen02/2023/08/16/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/"><span class="title">ScheduledThreadPoolExecutor 踩坑</span></a><a class="item title" href="/shichen02/2023/08/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/"><span class="title">操作系统的发展概述与展望</span></a></div></widget>
 
 
 
@@ -98,7 +98,7 @@
       
 
 
-<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/shichen02/">Home</a><span class="sep"></span><a class="cap breadcrumb" href="/shichen02/">Blog</a><span class="sep"></span><a class="cap breadcrumb-link" href="/shichen02/categories/BUG/">BUG</a></div><div id="post-meta">Posted on&nbsp;<time datetime="2023-07-19T03:31:53.257Z">2023-07-19</time></div></div>
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/shichen02/">Home</a><span class="sep"></span><a class="cap breadcrumb" href="/shichen02/">Blog</a><span class="sep"></span><a class="cap breadcrumb-link" href="/shichen02/categories/BUG/">BUG</a></div><div id="post-meta">Posted on&nbsp;<time datetime="2023-08-16T02:34:39.226Z">2023-08-16</time></div></div>
 
 <article class='md-text content post'>
 <h1 class="article-title"><span>ScheduledThreadPoolExecutor 踩坑</span></h1>
@@ -136,7 +136,7 @@
 
 </article>
 
-<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/shichen02/2023/07/19/SSH/">SSH 的前世今生</a></div><div class="item" id="next"><div class="note">Older</div><a href="/shichen02/2023/07/19/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/">操作系统的发展概述与展望</a></div></section></div>
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/shichen02/2023/08/16/SSH/">SSH 的前世今生</a></div><div class="item" id="next"><div class="note">Older</div><a href="/shichen02/2023/08/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/">操作系统的发展概述与展望</a></div></section></div>
 
 
 
