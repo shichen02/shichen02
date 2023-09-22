@@ -26,15 +26,15 @@
     <meta name="description" content="背景最近有这样一个需求，外部网络可以完全访问内网的所有资源。之前采用的有这样几种方案一、 内网穿透：将要访问的内网主机穿透到公网上面。举个例子，比如我要访问一个内网的服务，他的主机IP地址是172.16.2.88,端口是8080。现在利用公网穿透技术，将这个服务穿透到公网IP是48.230:103.123 端口为 12320 上面。外网主机就可以直接通过访问 48.230.103.123:1232">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一种内网穿透的实现思路">
-<meta property="og:url" content="https://shichen02.github.io/shichen02/2023/09/21/%E4%B8%80%E7%A7%8D%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF/index.html">
+<meta property="og:url" content="https://shichen02.github.io/shichen02/2023/09/22/%E4%B8%80%E7%A7%8D%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF/index.html">
 <meta property="og:site_name" content="shichen&#39;s blog">
 <meta property="og:description" content="背景最近有这样一个需求，外部网络可以完全访问内网的所有资源。之前采用的有这样几种方案一、 内网穿透：将要访问的内网主机穿透到公网上面。举个例子，比如我要访问一个内网的服务，他的主机IP地址是172.16.2.88,端口是8080。现在利用公网穿透技术，将这个服务穿透到公网IP是48.230:103.123 端口为 12320 上面。外网主机就可以直接通过访问 48.230.103.123:1232">
 <meta property="og:locale">
 <meta property="og:image" content="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1694008809964-b139e66c-6584-4cc1-89c0-179c44a63322.svg">
 <meta property="og:image" content="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1695290147655-590bce36-a9f5-448c-b368-8c7832facbf4.png">
 <meta property="og:image" content="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1695290344236-03d9fa9e-3e98-4e32-bfc1-862dbb9bdc8e.png">
-<meta property="article:published_time" content="2023-09-21T13:24:02.901Z">
-<meta property="article:modified_time" content="2023-09-21T13:24:02.901Z">
+<meta property="article:published_time" content="2023-09-22T08:20:08.995Z">
+<meta property="article:modified_time" content="2023-09-22T08:20:08.995Z">
 <meta property="article:author" content="shichen02">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://chengdumarkdown.oss-cn-chengdu.aliyuncs.com/blog/1694008809964-b139e66c-6584-4cc1-89c0-179c44a63322.svg">
@@ -97,7 +97,7 @@
       
 
 
-<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/shichen02/">Home</a><span class="sep"></span><a class="cap breadcrumb" href="/shichen02/">Blog</a><span class="sep"></span><a class="cap breadcrumb-link" href="/shichen02/categories/%E8%BF%90%E7%BB%B4/">运维</a></div><div id="post-meta">Posted on&nbsp;<time datetime="2023-09-21T13:24:02.901Z">2023-09-21</time></div></div>
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/shichen02/">Home</a><span class="sep"></span><a class="cap breadcrumb" href="/shichen02/">Blog</a><span class="sep"></span><a class="cap breadcrumb-link" href="/shichen02/categories/%E8%BF%90%E7%BB%B4/">运维</a></div><div id="post-meta">Posted on&nbsp;<time datetime="2023-09-22T08:20:08.995Z">2023-09-22</time></div></div>
 
 <article class='md-text content post'>
 <h1 class="article-title"><span>一种内网穿透的实现思路</span></h1>
@@ -133,7 +133,7 @@
 
 </article>
 
-<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/shichen02/2023/09/21/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/">ScheduledThreadPoolExecutor 踩坑</a></div><div class="item" id="next"><div class="note">Older</div><a href="/shichen02/2023/09/21/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/">操作系统的发展概述与展望</a></div></section></div>
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/shichen02/2023/09/22/ScheduledThreadPoolExecutor%20%E8%B8%A9%E5%9D%91/">ScheduledThreadPoolExecutor 踩坑</a></div><div class="item" id="next"><div class="note">Older</div><a href="/shichen02/2023/09/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B1%95%E6%9C%9B/">操作系统的发展概述与展望</a></div></section></div>
 
 
 
